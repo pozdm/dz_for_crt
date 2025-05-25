@@ -38,11 +38,24 @@ def login_user(credentials: UserLogin) -> Token:
 
     if response.status_code == 200:
         validate_response(response.json(), Token)
-        print("🔐 Вход выполнен" + "\n")
+        print("🔐 Вход выполнен")
         return response.json()["token"]
 
     else:
         raise (f"❌ Ошибка входа: {response.status_code} — {response.text}")
+
+
+def get_user(token: str):
+    url = f"{API_USER_URL}profile/"
+    headers = {"Authorization": f"{token}"}
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        validate_response(response.json(), UserResponse)
+        print(f"🔎 Текущий пользователь - {response.json()['username']}\n")
+
+    else:
+        raise (f"❌ Текущий пользователь не распознан")
 
 
 def create_task(token: str, task: TaskCreate) -> int:
@@ -91,7 +104,6 @@ def update_task(token: str, task_id: int, task_update: TaskUpdate):
     response = requests.patch(url, headers=headers, json=task_update.model_dump())
 
     if response.status_code == 200:
-        print(response.json())
         validate_response(response.json(), Task)
         print(f"✏️ Задача {task_id} обновлена")
 

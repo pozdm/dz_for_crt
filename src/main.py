@@ -1,12 +1,12 @@
 import uuid
 
 from src.models import UserCreate, UserLogin, TaskCreate, TaskUpdate
-from src.service import register_user, login_user, get_tasks, get_task_by_id, update_task, delete_task, create_task
+from src.service import register_user, login_user, get_tasks, get_task_by_id, update_task, delete_task, create_task, \
+    get_user
 
 
 def main():
     suffix = uuid.uuid4().hex[:8]
-    # suffix = 'michael'
     username = f"user_{suffix}"
     password = f"pass_{suffix}"
     email = f"{username}@example.com"
@@ -15,6 +15,8 @@ def main():
 
     register_user(user)
     token = login_user(UserLogin(username=user.username, password=user.password))
+
+    get_user(token)
 
     # Создание задачи
     task = TaskCreate(title="Начальная задача", description="Первое описание")
